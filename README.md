@@ -2,15 +2,10 @@
 
 > 基于PyTorch实现的GlobalPointer命名实体识别模型，支持嵌套和非嵌套实体识别
 
-[![Python](https://img.shields.io/badge/Python-3.6+-blue.svg)](https://www.python.org/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.8+-orange.svg)](https://pytorch.org/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 📖 项目简介
 
-本项目实现了苏剑林提出的[GlobalPointer](https://kexue.fm/archives/8373)命名实体识别方法，使用PyTorch框架。GlobalPointer通过统一的方式处理嵌套和非嵌套NER任务，相比传统序列标注方法具有更好的性能。
 
-![GlobalPointer多头识别嵌套实体示意图](https://kexue.fm/usr/uploads/2021/05/2377306125.png)
 
 ### 🌟 模型特点
 
@@ -24,9 +19,9 @@
 
 | 数据集 | 验证集F1 | 实体类型数 | 说明 |
 |--------|---------|-----------|------|
-| CLUENER2020 | **0.7966** | 10 | 细粒度命名实体识别 |
+| CLUENER2020 | **0.8186** | 10 | 细粒度命名实体识别 |
 | Weibo | **0.7407** | 4 | 微博命名实体识别 |
-| MSRA | **0.8186** | 3 | 新闻命名实体识别（验证集） |
+
 
 ### 支持的实体类型
 
@@ -38,23 +33,22 @@
 
 ### 环境要求
 
-- Python 3.6+
-- PyTorch 1.8.1+
+- Python 3.11+
 - CUDA（推荐，用于GPU训练）
-- 显存：至少6GB（RTX 4060可运行）
+- 显存：至少8GB（RTX 4060可运行）
 
 ### 安装步骤
 
 1. **克隆项目**
 ```bash
-git clone https://github.com/your-username/GlobalPointer_pytorch.git
+git clone https://github.com/dp4094/DBBG-net.git
 cd GlobalPointer_pytorch
 ```
 
 2. **创建虚拟环境**（推荐使用conda）
 ```bash
-conda create -n CLUENER2020 python=3.6
-conda activate CLUENER2020
+conda create -n test python=3.11.7
+conda activate test
 ```
 
 3. **安装依赖**
@@ -75,8 +69,8 @@ pip install -r requirements.txt
 ```python
 common = {
     "exp_name": "cluener",  # 数据集名称：cluener, weibo
-    "encoder": "BERT",  # 或 "DeBERTa"
-    "bert_path": "./pretrained_models/bert-base-chinese",
+    "encoder": "DeBERTa",  # 或 "DeBERTa"
+    "bert_path": "./pretrained_models/Erlangshen-DeBERTa-v2-320M-Chinese",
     "run_type": "train",
 }
 ```
@@ -284,40 +278,6 @@ GlobalPointer_pytorch/
 - 使用模型集成
 - 调整实体类型特定的阈值
 
-## 📚 引用
 
-如果本项目对您的研究有帮助，请引用：
 
-```bibtex
-@article{su2021globalpointer,
-  title={GlobalPointer：用统一的方式处理嵌套和非嵌套NER},
-  author={苏剑林},
-  journal={科学空间},
-  year={2021},
-  url={https://kexue.fm/archives/8373}
-}
-```
 
-## 📄 许可证
-
-本项目采用 [MIT License](LICENSE) 开源协议。
-
-## 🙏 致谢
-
-- 感谢 [苏剑林](https://kexue.fm/) 提出的GlobalPointer方法
-- 感谢 CLUENER2020 和 Weibo NER 数据集的提供者
-- 感谢 Hugging Face 提供的预训练模型
-
-## 🤝 贡献
-
-欢迎提交Issue和Pull Request！
-
-如果您有任何问题或建议，请随时联系。
-
-## ⭐ Star History
-
-如果这个项目对你有帮助，请给个Star支持一下！
-
----
-
-**English Documentation**: [README_EN.md](README_EN.md)
