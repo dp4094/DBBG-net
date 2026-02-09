@@ -1,0 +1,103 @@
+# ============================================
+# GlobalPointer项目 .gitignore
+# ============================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 虚拟环境
+venv/
+env/
+ENV/
+.venv
+conda_env/
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# 预训练模型（大文件，不提交到Git）
+pretrained_models/*
+!pretrained_models/README.md
+!pretrained_models/.gitignore
+
+# 训练输出（大文件，不提交到Git）
+outputs/*
+!outputs/README.md
+!outputs/.gitignore
+
+# 评估结果
+results/*
+!results/README.md
+!results/.gitignore
+
+# 数据集文件（可选，根据需要调整）
+# 如果数据集较大，建议不提交
+datasets/*/train.json
+datasets/*/dev.json
+datasets/*/test.json
+# 保留实体映射文件
+!datasets/*/ent2id.json
+
+# 临时文件
+*.tmp
+*.bak
+*.log
+*.swp
+*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# 压缩文件
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 系统文件
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 测试覆盖率
+.coverage
+htmlcov/
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Wandb日志
+wandb/
+
+# 其他
+*.orig
