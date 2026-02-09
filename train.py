@@ -705,6 +705,38 @@ if __name__ == '__main__':
             
             if config["logger"] == "wandb":
                 wandb_logger.log({"Best_F1": max_f1})
+        
+        # 训练完成后，根据配置决定是否在测试集上评估
+        if config.get("auto_test_after_train", True):
+            logger.info("\n" + "="*60)
+            logger.info("训练完成！开始在测试集上评估最佳模型...")
+            logger.info("="*60)
+            
+            # 加载最佳模型
+            saved_models = glob.glob(model_state_dict_dir + "/model_state_dict_*.pt")
+            if saved_models:
+                # 加载最后保存的模型（通常是最佳模型）
+                best_model_path = sorted(saved_models)[-1]
+                logger.info(f"加载最佳模型: {best_model_path}")
+                model.load_state_dict(torch.load(best_model_path))
+                
+                # 在测试集上评估
+                test_dataloader = data_generator(data_type="test")
+                logger.info("在测试集上评估...")
+                test_f1, test_loss = valid(model, test_dataloader, ema=None)
+                
+                logger.info("\n" + "="*60)
+                logger.info(f"测试集最终结果 - F1: {test_f1:.4f}, Loss: {test_loss:.6f}")
+                logger.info("="*60)
+                
+                if config["logger"] == "wandb":
+                    wandb_logger.log({"Test_F1": test_f1, "Test_Loss": test_loss})
+            else:
+                logger.warning("未找到保存的模型，跳过测试集评估")
+                logger.info(f"提示: 模型F1分数可能未达到保存阈值 f1_2_save={config['f1_2_save']}")
+        else:
+            logger.info("\n训练完成！（auto_test_after_train=False，跳过测试集评估）")
+            
     elif config["run_type"] == "eval":
         # 此处的 eval 是为了评估测试集的 p r f1（如果测试集有标签的情况），无标签预测使用 evaluate.py
         from evaluate import load_model  # 延迟导入

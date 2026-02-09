@@ -43,6 +43,9 @@ common = {
     # 保存模型的F1分数阈值，只有超过此阈值的模型才会被保存
     "f1_2_save": 0.72,
     
+    # 是否在训练完成后自动在测试集上评估
+    "auto_test_after_train": True,
+    
     # 日志记录器类型（wandb: 使用Weights & Biases, default: 控制台输出）
     "logger": "default"
 }
