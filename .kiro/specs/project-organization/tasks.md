@@ -106,14 +106,14 @@
     - 提供示例值和说明
     - _Requirements: 5.4_
 
-- [ ] 6. 生成完整的requirements.txt
-  - [ ] 6.1 分析项目依赖
+- [x] 6. 生成完整的requirements.txt
+  - [x] 6.1 分析项目依赖
     - 扫描所有Python文件的import语句
     - 识别第三方包
     - 确定每个包的版本号
     - _Requirements: 2.1_
 
-  - [ ] 6.2 编写requirements.txt
+  - [x] 6.2 编写requirements.txt
     - 按类别组织依赖（核心、可选、开发）
     - 为每个依赖添加注释说明用途
     - 指定版本号或版本范围
