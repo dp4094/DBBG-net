@@ -99,5 +99,9 @@ dmypy.json
 # Wandb日志
 wandb/
 
+# 环境变量文件
+.env
+.env.local
+
 # 其他
 *.orig
