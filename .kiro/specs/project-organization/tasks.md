@@ -106,7 +106,7 @@
     - 提供示例值和说明
     - _Requirements: 5.4_
 
-- [x] 6. 生成完整的requirements.txt
+- [ ] 6. 生成完整的requirements.txt
   - [x] 6.1 分析项目依赖
     - 扫描所有Python文件的import语句
     - 识别第三方包

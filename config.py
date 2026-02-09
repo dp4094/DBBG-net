@@ -38,7 +38,7 @@ common = {
     ),
     
     # 运行类型（train: 训练, eval: 评估）
-    "run_type": "eval",
+    "run_type": "train",
     
     # 保存模型的F1分数阈值，只有超过此阈值的模型才会被保存
     "f1_2_save": 0.72,
@@ -173,8 +173,8 @@ train_config = {
 
 eval_config = {
     # -------------------- 模型配置 --------------------
-    # 模型检查点目录路径
-    "model_state_dir": "./outputs/2025-09-29_14.29.34",
+    # 模型检查点目录路径（需要根据实际训练输出修改）
+    "model_state_dir": "./outputs/weibo",  # 默认使用数据集名称的输出目录
     
     # WandB运行ID（如果使用wandb）
     "run_id": "",
