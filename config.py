@@ -262,17 +262,7 @@ step_scheduler = {
 # ============================================================================
 
 def get_dataset_specific_configs(dataset_name: str) -> Dict[str, Any]:
-    """
-    根据数据集名称返回特定的实体参数配置
-    
-    不同数据集的实体类型分布和难度不同，需要针对性地调整参数。
-    
-    Args:
-        dataset_name: 数据集名称 ('cluener', 'msra', 'peoplesdaily', 'weibo')
-    
-    Returns:
-        包含entity_specific_smoothing和entity_thresholds的配置字典
-    """
+
     configs = {
         'cluener': {
             # 实体类型特定的标签平滑系数
