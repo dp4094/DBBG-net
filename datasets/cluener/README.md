@@ -12,8 +12,4 @@ CLUENER 细粒度命名实体识别
 职位（position），
 景点（scene）
 
-数据详细介绍、基线模型和效果测评，见 https://github.com/CLUEbenchmark/CLUENER
-
-技术讨论或问题，请项目中提issue或PR，或发送电子邮件到 ChineseGLUE@163.com
-
-测试集上SOTA效果见榜单：www.CLUEbenchmark.com
+数据集下载地址：https://opendatalab.org.cn/OpenDataLab/CLUENER2020
