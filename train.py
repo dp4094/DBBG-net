@@ -1,7 +1,3 @@
-"""
-Date: 2021-05-31 19:50:58
-LastEditors: GodK
-"""
 
 import os
 import config as config_module
@@ -17,8 +13,8 @@ from tqdm import tqdm
 import glob
 # from evaluate import load_model  # 延迟导入，避免在模块加载时执行evaluate的初始化代码
 import time
-# 兼容当前版本的PyTorch
-from torch.cuda.amp import autocast, GradScaler
+# 兼容新版本的PyTorch混合精度训练
+from torch.amp import autocast, GradScaler
 # 导入数据增强模块
 from common.augment import NERDataAugmenter
 # 导入EMA模块
@@ -273,28 +269,14 @@ def train_step(batch_train, model, optimizer, criterion, scaler):
     
     # 使用混合精度训练
     if hyper_parameters.get("use_mixed_precision", False):
-        with autocast():
+        with autocast('cuda' if torch.cuda.is_available() else 'cpu'):
             logits = model(batch_input_ids, batch_attention_mask, batch_token_type_ids)
-            
-            # 添加调试信息
-            print(f"标签形状: {batch_labels.shape}")
-            print(f"标签中1的数量: {batch_labels.sum().item()}")
-            print(f"标签中非零元素的比例: {(batch_labels != 0).float().mean().item()}")
-            print(f"模型输出形状: {logits.shape}")
-            print(f"模型输出的最大值: {logits.max().item()}")
-            print(f"模型输出的最小值: {logits.min().item()}")
-            print(f"模型输出的均值: {logits.mean().item()}")
-            print(f"模型输出的标准差: {logits.std().item()}")
-            
-            # 暂时强制使用原始损失函数
-            loss = multilabel_categorical_crossentropy(batch_labels, logits)
-            
-            print(f"计算的损失值: {loss.item()}")
+            loss = criterion(batch_labels, logits)
         
-        # 梯度缩放更新
+        # 梯度缩放和反向传播
         scaler.scale(loss).backward()
         
-        # 梯度裁剪
+        # 梯度裁剪（必须在 unscale 之后）
         if hyper_parameters.get("use_gradient_clip", False):
             scaler.unscale_(optimizer)
             torch.nn.utils.clip_grad_norm_(
@@ -302,26 +284,13 @@ def train_step(batch_train, model, optimizer, criterion, scaler):
                 hyper_parameters.get("gradient_clip_value", 1.0)
             )
         
+        # 更新参数
         scaler.step(optimizer)
         scaler.update()
     else:
-        # 常规训练
+        # 常规训练（不使用混合精度）
         logits = model(batch_input_ids, batch_attention_mask, batch_token_type_ids)
-        
-        # 添加调试信息
-        print(f"标签形状: {batch_labels.shape}")
-        print(f"标签中1的数量: {batch_labels.sum().item()}")
-        print(f"标签中非零元素的比例: {(batch_labels != 0).float().mean().item()}")
-        print(f"模型输出形状: {logits.shape}")
-        print(f"模型输出的最大值: {logits.max().item()}")
-        print(f"模型输出的最小值: {logits.min().item()}")
-        print(f"模型输出的均值: {logits.mean().item()}")
-        print(f"模型输出的标准差: {logits.std().item()}")
-        
-        # 暂时强制使用原始损失函数
-        loss = multilabel_categorical_crossentropy(batch_labels, logits)
-        
-        print(f"计算的损失值: {loss.item()}")
+        loss = criterion(batch_labels, logits)
         
         loss.backward()
         
@@ -342,8 +311,8 @@ def train_step(batch_train, model, optimizer, criterion, scaler):
 def train(model, dataloader, epoch, optimizer):
     model.train()
 
-    # 创建 GradScaler - 兼容当前版本
-    scaler = GradScaler()
+    # 创建 GradScaler - 使用新版本 API
+    scaler = GradScaler('cuda' if torch.cuda.is_available() else 'cpu')
     
     # 如果启用EMA，创建EMA对象
     if hyper_parameters.get("use_ema", False):
