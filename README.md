@@ -1,4 +1,4 @@
-DBBG-net中文命名实体识别
+## DBBG-net中文命名实体识别
 
 > 基于PyTorch实现的GlobalPointer命名实体识别模型，支持嵌套和非嵌套实体识别
 
