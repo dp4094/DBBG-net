@@ -7,31 +7,17 @@ import torch
 def multilabel_categorical_crossentropy(y_true, y_pred):
     """
     https://kexue.fm/archives/7359
+    多标签分类的交叉熵损失函数
     """
-    # 打印输入的形状和值的范围
-    print(f"原始损失函数 - y_true形状: {y_true.shape}")
-    print(f"原始损失函数 - y_pred形状: {y_pred.shape}")
-    print(f"原始损失函数 - y_true中1的数量: {y_true.sum().item()}")
-    print(f"原始损失函数 - y_pred的均值: {y_pred.mean().item()}, 最大值: {y_pred.max().item()}, 最小值: {y_pred.min().item()}")
-    
-    y_pred_transformed = (1 - 2 * y_true) * y_pred  # -1 -> pos classes, 1 -> neg classes
-    print(f"原始损失函数 - y_pred_transformed的均值: {y_pred_transformed.mean().item()}")
-    
-    y_pred_neg = y_pred_transformed - y_true * 1e12  # mask the pred outputs of pos classes
-    y_pred_pos = (y_pred_transformed - (1 - y_true) * 1e12)  # mask the pred outputs of neg classes
+    y_pred = (1 - 2 * y_true) * y_pred  # -1 -> pos classes, 1 -> neg classes
+    y_pred_neg = y_pred - y_true * 1e4  # mask the pred outputs of pos classes
+    y_pred_pos = (y_pred - (1 - y_true) * 1e4)  # mask the pred outputs of neg classes
     zeros = torch.zeros_like(y_pred[..., :1])
     y_pred_neg = torch.cat([y_pred_neg, zeros], dim=-1)
     y_pred_pos = torch.cat([y_pred_pos, zeros], dim=-1)
     neg_loss = torch.logsumexp(y_pred_neg, dim=-1)
     pos_loss = torch.logsumexp(y_pred_pos, dim=-1)
-
-    print(f"原始损失函数 - neg_loss均值: {neg_loss.mean().item()}")
-    print(f"原始损失函数 - pos_loss均值: {pos_loss.mean().item()}")
-    
-    total_loss = (neg_loss + pos_loss).mean()
-    print(f"原始损失函数 - 总损失: {total_loss.item()}")
-    
-    return total_loss
+    return (neg_loss + pos_loss).mean()
 
 
 def multilabel_categorical_crossentropy_with_smoothing(y_true, y_pred, epsilon=0.1):
@@ -43,21 +29,13 @@ def multilabel_categorical_crossentropy_with_smoothing(y_true, y_pred, epsilon=0
         y_pred: 预测分数
         epsilon: 平滑因子
     """
-    # 打印输入的形状和值的范围
-    print(f"损失函数 - y_true形状: {y_true.shape}")
-    print(f"损失函数 - y_pred形状: {y_pred.shape}")
-    print(f"损失函数 - y_true中1的数量: {y_true.sum().item()}")
-    print(f"损失函数 - y_pred的均值: {y_pred.mean().item()}, 最大值: {y_pred.max().item()}, 最小值: {y_pred.min().item()}")
-    
-    # 简单的标签平滑：正标签变为1-epsilon，负标签变为epsilon/2
+    # 标签平滑：正标签变为1-epsilon，负标签变为epsilon/2
     y_true_smooth = y_true * (1 - epsilon) + epsilon/2
     
     # 使用平滑后的标签计算损失
-    y_pred_transformed = (1 - 2 * y_true_smooth) * y_pred
-    print(f"损失函数 - y_pred_transformed的均值: {y_pred_transformed.mean().item()}")
-    
-    y_pred_neg = y_pred_transformed - y_true_smooth * 1e12
-    y_pred_pos = (y_pred_transformed - (1 - y_true_smooth) * 1e12)
+    y_pred = (1 - 2 * y_true_smooth) * y_pred
+    y_pred_neg = y_pred - y_true_smooth * 1e4
+    y_pred_pos = (y_pred - (1 - y_true_smooth) * 1e4)
     
     zeros = torch.zeros_like(y_pred[..., :1])
     y_pred_neg = torch.cat([y_pred_neg, zeros], dim=-1)
@@ -66,13 +44,7 @@ def multilabel_categorical_crossentropy_with_smoothing(y_true, y_pred, epsilon=0
     neg_loss = torch.logsumexp(y_pred_neg, dim=-1)
     pos_loss = torch.logsumexp(y_pred_pos, dim=-1)
     
-    print(f"损失函数 - neg_loss均值: {neg_loss.mean().item()}")
-    print(f"损失函数 - pos_loss均值: {pos_loss.mean().item()}")
-    
-    total_loss = (neg_loss + pos_loss).mean()
-    print(f"损失函数 - 总损失: {total_loss.item()}")
-    
-    return total_loss
+    return (neg_loss + pos_loss).mean()
 
 
 class EMA:
