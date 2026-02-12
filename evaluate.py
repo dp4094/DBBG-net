@@ -309,17 +309,6 @@ def evaluate():
             # 使用当前阈值进行预测
             predict_res = predict(predict_dataloader, model_or_models)
 
-            # 此处需要根据具体数据集计算F1
-            # 这里只是示意，实际需要根据您的评估逻辑实现
-            # f1 = calculate_f1(predict_res, gold_data)
-            # print(f"阈值 {threshold} 的F1值: {f1}")
-            #
-            # if f1 > best_f1:
-            #     best_f1 = f1
-            #     best_threshold = threshold
-
-        # print(f"最佳阈值: {best_threshold}, F1: {best_f1}")
-        # config["decode_threshold"] = best_threshold
     
     # 使用模型集成进行预测
     predict_res = predict(predict_dataloader, model_or_models)
