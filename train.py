@@ -135,18 +135,7 @@ def get_entity_thresholds(ent2id_dict):
     logger.info(f"实体特定解码阈值: {decode_thresh_dict}")
     return decode_thresh_dict
 
-# 延迟加载ent2id，在main函数中处理
-# if config_module.common["exp_name"]:
-#     ent2id_path = os.path.join(config_module.common["data_home"], config_module.common["exp_name"], config["ent2id"])
-# else:
-#     ent2id_path = os.path.join(config_module.common["data_home"], config["ent2id"])
 
-# ent2id = load_entity_dict(ent2id_path)
-# ent_type_size = len(ent2id)
-
-# # 获取实体特定参数
-# entity_smoothing_weights = get_entity_specific_params(ent2id)
-# entity_thresh_dict = get_entity_thresholds(ent2id)
 
 def data_generator(data_type="train"):
     """
