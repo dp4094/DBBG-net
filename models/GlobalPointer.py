@@ -267,7 +267,8 @@ class GlobalPointer(nn.Module):
         context_outputs = self.encoder(input_ids, attention_mask, token_type_ids)
         # last_hidden_state:(batch_size, seq_len, hidden_size)
         last_hidden_state = context_outputs[0]
-
+        # 确保数据类型为 float32（GRU 需要）
+        last_hidden_state = last_hidden_state.float()
         # 通过BiGRU层
         gru_output, _ = self.bigru(last_hidden_state)
 
@@ -332,13 +333,13 @@ class GlobalPointer(nn.Module):
         # logits:(batch_size, ent_type_size, seq_len, seq_len)
         logits = torch.einsum('bmhd,bnhd->bhmn', qw, kw)
 
-        # padding mask
+        # padding mask - 使用较小的mask值以兼容FP16
         pad_mask = attention_mask.unsqueeze(1).unsqueeze(1).expand(batch_size, self.ent_type_size, seq_len, seq_len)
-        logits = logits * pad_mask - (1 - pad_mask) * 1e12
+        logits = logits * pad_mask - (1 - pad_mask) * 1e4
 
         # 排除下三角
         mask = torch.tril(torch.ones_like(logits), -1)
-        logits = logits - mask * 1e12
+        logits = logits - mask * 1e4
 
         return logits / self.inner_dim ** 0.5
 

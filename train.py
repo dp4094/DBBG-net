@@ -1,3 +1,8 @@
+"""
+GlobalPointer NER 训练脚本
+Date: 2021-05-31 19:50:58
+LastEditors: GodK
+"""
 
 import os
 import config as config_module
@@ -271,7 +276,19 @@ def train_step(batch_train, model, optimizer, criterion, scaler):
     if hyper_parameters.get("use_mixed_precision", False):
         with autocast('cuda' if torch.cuda.is_available() else 'cpu'):
             logits = model(batch_input_ids, batch_attention_mask, batch_token_type_ids)
+            
+            # 调试信息
+            print(f"标签形状: {batch_labels.shape}")
+            print(f"标签中1的数量: {batch_labels.sum().item()}")
+            print(f"标签中非零元素的比例: {(batch_labels != 0).float().mean().item()}")
+            print(f"模型输出形状: {logits.shape}")
+            print(f"模型输出的最大值: {logits.max().item()}")
+            print(f"模型输出的最小值: {logits.min().item()}")
+            print(f"模型输出的均值: {logits.mean().item()}")
+            print(f"模型输出的标准差: {logits.std().item()}")
+            
             loss = criterion(batch_labels, logits)
+            print(f"计算的损失值: {loss.item()}")
         
         # 梯度缩放和反向传播
         scaler.scale(loss).backward()
