@@ -1,8 +1,4 @@
-"""
-GlobalPointer NER 训练脚本
-Date: 2021-05-31 19:50:58
-LastEditors: GodK
-"""
+
 
 import os
 import config as config_module
