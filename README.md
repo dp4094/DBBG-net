@@ -14,7 +14,7 @@
 
 ## 📊 Results
 
-| Dataset | Dev F1 | #Entity Types | Notes |
+| Dataset | Best F1 | #Entity Types | Notes |
 |---|---:|---:|---|
 | CLUENER2020 | **0.8186** | 10 | Fine-grained Chinese NER |
 | Weibo | **0.7407** | 4 | Chinese Weibo NER |
